@@ -40,6 +40,33 @@ class RepeatedAndExpression extends AbstractContainerExpression
     }
 
     /**
+     * @inheritdoc
+     */
+    public function produceRandomWord(array $rules, $debugPrint = false)
+    {
+        // We set a limit to the maximum to avoid giant loops
+        $repetitions = rand($this->min, min($this->min + 3, $this->max));
+
+        $word = '';
+
+        for ($i = 0; $i < $repetitions; $i++) {
+            foreach ($this->expressions as $expression) {
+                if ($debugPrint) {
+                    echo ' expression ( ';
+                }
+
+                $word .= $expression->produceRandomWord($rules, $debugPrint);
+
+                if ($debugPrint) {
+                    echo ' ) ';
+                }
+            }
+        }
+
+        return $word;
+    }
+
+    /**
      * Setter for min
      *
      * @return int
@@ -58,12 +85,14 @@ class RepeatedAndExpression extends AbstractContainerExpression
     {
         $min = (int) $min;
 
-        if ($min > $this->max) {
-            throw new \InvalidArgumentException('Error: Minimum cannot be grater than maximum');
-        }
         if ($min < 0) {
             throw new \InvalidArgumentException('Error: Minimum cannot be smaller than zero');
         }
+        if ($min > $this->max) {
+            // We do not throw an exception but silently adjust the maximum.
+            $this->max = $min;
+        }
+
 
         $this->min = $min;
     }
@@ -87,8 +116,12 @@ class RepeatedAndExpression extends AbstractContainerExpression
     {
         $max = (int) $max;
 
+        if ($max < 0) {
+            throw new \InvalidArgumentException('Error: Maximum cannot be smaller than zero');
+        }
         if ($max < $this->min) {
-            throw new \InvalidArgumentException('Error: Maximum cannot be smaller than minimum');
+            // We do not throw an exception but silently adjust the minimum.
+            $this->min = $max;
         }
 
         $this->max = $max;

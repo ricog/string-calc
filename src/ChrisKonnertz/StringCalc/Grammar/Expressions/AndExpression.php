@@ -11,6 +11,28 @@ namespace ChrisKonnertz\StringCalc\Grammar\Expressions;
 class AndExpression extends AbstractContainerExpression
 {
 
+    /**
+     * @inheritdoc
+     */
+    public function produceRandomWord(array $rules, $debugPrint = false)
+    {
+        $word = '';
+
+        foreach ($this->expressions as $expression) {
+            if ($debugPrint) {
+                echo ' and ( ';
+            }
+
+            $word .= $expression->produceRandomWord($rules, $debugPrint);
+
+            if ($debugPrint) {
+                echo ' ) ';
+            }
+        }
+
+        return $word;
+    }
+
     public function __toString()
     {
         $parts = [];

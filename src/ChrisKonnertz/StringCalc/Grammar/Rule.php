@@ -48,6 +48,18 @@ class Rule
     }
 
     /**
+     * Produces and returns a random word with this rule
+     *
+     * @param Rule[] $rules
+     * @param bool $debugPrint
+     * @return string
+     */
+    public function produceRandomWord(array $rules, $debugPrint = false)
+    {
+        return $this->expression->produceRandomWord($rules, $debugPrint);
+    }
+
+    /**
      * Getter for the name of the nonterminal symbol
      *
      * @return string

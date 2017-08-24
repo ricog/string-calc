@@ -11,6 +11,32 @@ namespace ChrisKonnertz\StringCalc\Grammar\Expressions;
 class OptionalAndExpression extends AbstractContainerExpression
 {
 
+    /**
+     * @inheritdoc
+     */
+    public function produceRandomWord(array $rules, $debugPrint = false)
+    {
+        if (rand(0, 1) == 0) {
+            return '';
+        }
+
+        $word = '';
+
+        foreach ($this->expressions as $expression) {
+            if ($debugPrint) {
+                echo ' optionalAnd ( ';
+            }
+
+            $word .= $expression->produceRandomWord($rules, $debugPrint);
+
+            if ($debugPrint) {
+                echo ' ) ';
+            }
+        }
+
+        return $word;
+    }
+
     public function __toString()
     {
         $parts = [];
