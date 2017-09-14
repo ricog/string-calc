@@ -102,7 +102,7 @@ class Parser
 
                 if ($symbol === null) {
                     $this->throwException(
-                        NotFoundException::class,
+                        '\ChrisKonnertz\StringCalc\Exceptions\NotFoundException',
                         'Error: Detected unknown or invalid string identifier.',
                         $token->getPosition(),
                         $identifier
@@ -110,30 +110,30 @@ class Parser
                 }
             } elseif ($type == Token::TYPE_NUMBER) {
                 // Notice: Numbers do not have an identifier
-                $symbol = $this->symbolContainer->findSubtypes(Number::class)[0];
+                $symbol = $this->symbolContainer->findSubtypes('\ChrisKonnertz\StringCalc\Symbols\Concrete\Number')[0];
             } else { // Type Token::TYPE_CHARACTER:
                 $identifier = $token->getValue();
                 $symbol = $this->symbolContainer->find($identifier);
 
                 if ($symbol === null) {
                     $this->throwException(
-                        NotFoundException::class,
+                        '\ChrisKonnertz\StringCalc\Exceptions\NotFoundException',
                         'Error: Detected unknown or invalid character identifier.',
                         $token->getPosition(),
                         $identifier
                     );
                 }
 
-                if (is_a($symbol, AbstractOpeningBracket::class)) {
+                if (is_a($symbol, '\ChrisKonnertz\StringCalc\Symbols\AbstractOpeningBracket')) {
                     $openBracketCounter++;
                 }
-                if (is_a($symbol, AbstractClosingBracket::class)) {
+                if (is_a($symbol, '\ChrisKonnertz\StringCalc\Symbols\AbstractClosingBracket')) {
                     $openBracketCounter--;
 
                     // Make sure there are not too many closing brackets
                     if ($openBracketCounter < 0) {
                         $this->throwException(
-                            ParserException::class,
+                            '\ChrisKonnertz\StringCalc\Exceptions\ParserException',
                             'Error: Found closing bracket that does not have an opening bracket.',
                             $token->getPosition(),
                             $identifier
@@ -144,9 +144,9 @@ class Parser
 
             // Make sure a function is not followed by a symbol that is not of type opening bracket
             if ($expectingOpeningBracket) {
-                if (! is_a($symbol, AbstractOpeningBracket::class)) {
+                if (! is_a($symbol, '\ChrisKonnertz\StringCalc\Symbols\AbstractOpeningBracket')) {
                     $this->throwException(
-                        ParserException::class,
+						'\ChrisKonnertz\StringCalc\Exceptions\ParserException',
                         'Error: Expected opening bracket (after a function) but got something else.',
                         $token->getPosition(),
                         get_class($symbol)
@@ -155,7 +155,7 @@ class Parser
 
                 $expectingOpeningBracket = false;
             } else {
-                if (is_a($symbol, AbstractFunction::class)) {
+                if (is_a($symbol, '\ChrisKonnertz\StringCalc\Symbols\AbstractFunction')) {
                     $expectingOpeningBracket = true;
                 }
             }
@@ -199,17 +199,17 @@ class Parser
         $openBracketCounter = 0;
 
         foreach ($symbolNodes as $index => $symbolNode) {
-            if (! is_a($symbolNode, SymbolNode::class)) {
+            if (! is_a($symbolNode, '\ChrisKonnertz\StringCalc\Parser\Nodes\SymbolNode')) {
                 throw new ParserException('Error: Expected symbol node, but got "'.gettype($symbolNode).'"');
             }
 
-            if (is_a($symbolNode->getSymbol(), AbstractOpeningBracket::class)) {
+            if (is_a($symbolNode->getSymbol(), '\ChrisKonnertz\StringCalc\Symbols\AbstractOpeningBracket')) {
                 $openBracketCounter++;
 
                 if ($openBracketCounter > 1) {
                     $nodesInBrackets[] = $symbolNode;
                 }
-            } elseif (is_a($symbolNode->getSymbol(), AbstractClosingBracket::class)) {
+            } elseif (is_a($symbolNode->getSymbol(), '\ChrisKonnertz\StringCalc\Symbols\AbstractClosingBracket')) {
                 $openBracketCounter--;
 
                 // Found a closing bracket on level 0
@@ -251,7 +251,7 @@ class Parser
         $functionSymbolNode = null;
 
         foreach ($nodes as $node) {
-            if (is_a($node, ContainerNode::class)) {
+            if (is_a($node, '\ChrisKonnertz\StringCalc\Parser\Nodes\ContainerNode')) {
                 /** @var ContainerNode $node */
                 $transformedChildNodes = $this->transformTreeByFunctions($node->getChildNodes());
 
@@ -263,10 +263,10 @@ class Parser
                     $node->setChildNodes($transformedChildNodes);
                     $transformedNodes[] = $node;
                 }
-            } elseif (is_a($node, SymbolNode::class)) {
+            } elseif (is_a($node, '\ChrisKonnertz\StringCalc\Parser\Nodes\SymbolNode')) {
                 /** @var SymbolNode $node */
                 $symbol = $node->getSymbol();
-                if (is_a($symbol, AbstractFunction::class)) {
+                if (is_a($symbol, '\ChrisKonnertz\StringCalc\Symbols\AbstractFunction')) {
                     $functionSymbolNode = $node;
                 } else {
                     $transformedNodes[] = $node;
@@ -292,12 +292,12 @@ class Parser
         // (If this happens the calculator will throw an exception)
 
         foreach ($nodes as $index => $node) {
-            if (is_a($node, SymbolNode::class)) {
+            if (is_a($node, '\ChrisKonnertz\StringCalc\Parser\Nodes\SymbolNode')) {
                 /** @var $node SymbolNode */
 
                 $symbol = $node->getSymbol();
 
-                if (is_a($symbol, AbstractOperator::class)) {
+                if (is_a($symbol, '\ChrisKonnertz\StringCalc\Symbols\AbstractOperator')) {
                     /** @var $symbol AbstractOperator */
 
                     $posOfRightOperand = $index + 1;
@@ -306,7 +306,7 @@ class Parser
                     // Example term: "-1"
                     if ($posOfRightOperand >= sizeof($nodes)) {
                         $this->throwException(
-                            ParserException::class,
+                            '\ChrisKonnertz\StringCalc\Exceptions\ParserException',
                             'Error: Found operator that does not stand before an operand.',
                             $node->getToken()->getValue(),
                             $node->getToken()->getPosition()
@@ -321,9 +321,9 @@ class Parser
                     if ($posOfLeftOperand >= 0) {
                         $leftOperand = $nodes[$posOfLeftOperand];
 
-                        if (is_a($leftOperand, SymbolNode::class)) {
+                        if (is_a($leftOperand, '\ChrisKonnertz\StringCalc\Parser\Nodes\SymbolNode')) {
                             /** @var $leftOperand SymbolNode */
-                            if (is_a($leftOperand->getSymbol(), AbstractOperator::class)) {
+                            if (is_a($leftOperand->getSymbol(), '\ChrisKonnertz\StringCalc\Symbols\AbstractOperator')) {
                                 // Operator is unary if positioned right to another operator
                                 $leftOperand = null;
                             }
@@ -334,7 +334,7 @@ class Parser
                     if ($leftOperand === null) {
                         if (! $symbol->getOperatesUnary()) {
                             $this->throwException(
-                                ParserException::class,
+                                '\ChrisKonnertz\StringCalc\Exceptions\ParserException',
                                 'Error: Found operator in unary notation that is not unary.',
                                 $node->getToken()->getValue(),
                                 $node->getToken()->getPosition()
@@ -346,7 +346,7 @@ class Parser
                     } else {
                         if (! $symbol->getOperatesBinary()) {
                             $this->throwException(
-                                ParserException::class,
+                                '\ChrisKonnertz\StringCalc\Exceptions\ParserException',
                                 'Error: Found operator in binary notation that is not binary.',
                                 $node->getToken()->getValue(),
                                 $node->getToken()->getPosition()

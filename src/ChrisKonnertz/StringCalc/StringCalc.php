@@ -70,7 +70,7 @@ class StringCalc
             }
 
             $interfaces = class_implements($container);
-            if (! in_array(ContainerInterface::class, $interfaces)) {
+            if (! in_array('\ChrisKonnertz\StringCalc\ContainerInterface', $interfaces)) {
                 throw new \InvalidArgumentException('Error: Passed container does not implement ContainerInterface');
             }
 

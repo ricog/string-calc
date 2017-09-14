@@ -22,10 +22,10 @@ class ServiceProviderRegistry implements ServiceProviderRegistryInterface
     public function getServiceProviders()
     {
         $serviceProviders = [
-            'stringcalc_stringhelper'       => StringHelperServiceProvider::class,
-            'stringcalc_inputstream'        => InputStreamServiceProvider::class,
-            'stringcalc_symbolcontainer'    => SymbolContainerServiceProvider::class,
-            'stringcalc_calculator'         => CalculatorServiceProvider::class,
+            'stringcalc_stringhelper'       => '\ChrisKonnertz\StringCalc\Container\ServiceProviders\StringHelperServiceProvider',
+            'stringcalc_inputstream'        => '\ChrisKonnertz\StringCalc\Container\ServiceProviders\InputStreamServiceProvider',
+            'stringcalc_symbolcontainer'    => '\ChrisKonnertz\StringCalc\Container\ServiceProviders\SymbolContainerServiceProvider',
+            'stringcalc_calculator'         => '\ChrisKonnertz\StringCalc\Container\ServiceProviders\CalculatorServiceProvider',
         ];
 
         return $serviceProviders;

@@ -48,7 +48,7 @@ class Container implements ContainerInterface
         foreach ($serviceProviders as $serviceProvider) {
             // Since $serviceProvider only contains the name of the string and therefore not an object,
             // we have to set $allow_string to true, of course.
-            if (! is_a($serviceProvider, AbstractServiceProvider::class, true)) {
+            if (! is_a($serviceProvider, '\ChrisKonnertz\StringCalc\Container\AbstractServiceProvider', true)) {
                 throw new ContainerException(
                     'Error: Invalid value for entry in service providers array. '.
                     'Expected service provider class name but got something else'
@@ -89,7 +89,7 @@ class Container implements ContainerInterface
             throw new ContainerException('Error: Could not create service provider via reflection');
         }
 
-        if (! is_a($serviceProvider, AbstractServiceProvider::class)) {
+        if (! is_a($serviceProvider, '\ChrisKonnertz\StringCalc\Container\AbstractServiceProvider')) {
             throw new ContainerException(
                 'Error: Service provider object does not inherit from AbstractServiceProvider'
             );
@@ -99,7 +99,7 @@ class Container implements ContainerInterface
             // Try to make the provider provide the service. Might throw an exception.
             $object = $serviceProvider->provide();
         } catch (\Exception $exception) {
-            if (is_a($exception, ContainerException::class)) {
+            if (is_a($exception, '\ChrisKonnertz\StringCalc\Container\ContainerException')) {
                 /** @var ContainerException $exception */
                 throw $exception;
             } else {

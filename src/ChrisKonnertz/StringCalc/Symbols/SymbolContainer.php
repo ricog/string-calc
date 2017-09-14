@@ -51,7 +51,7 @@ class SymbolContainer implements SymbolContainerInterface
      */
     protected function validate()
     {
-        $numberSymbols = $this->findSubtypes(Number::class);
+        $numberSymbols = $this->findSubtypes('\ChrisKonnertz\StringCalc\Symbols\Concrete\Number');
         if (sizeof($numberSymbols) != 1) {
             throw new NotFoundException(
                 'Error: Expected to contain one number class but found '.sizeof($numberSymbols)
@@ -59,7 +59,7 @@ class SymbolContainer implements SymbolContainerInterface
         }
 
         foreach ($this->symbols as $symbol) {
-            if (sizeof($symbol->getIdentifiers()) == 0 and ! is_a($symbol, Number::class)) {
+            if (sizeof($symbol->getIdentifiers()) == 0 and ! is_a($symbol, '\ChrisKonnertz\StringCalc\Symbols\Concrete\Number')) {
                 throw new \LengthException('Error: AbstractSymbol does not have any identifiers');
             }
         }

@@ -104,7 +104,7 @@ class SymbolNode extends AbstractNode
      */
     public function setIsUnaryOperator($isUnaryOperator = true)
     {
-        if (! is_a($this->getSymbol(), AbstractOperator::class)) {
+        if (! is_a($this->getSymbol(), '\ChrisKonnertz\StringCalc\Symbols\AbstractOperator')) {
             throw new \InvalidArgumentException(
                 'Error: Cannot mark node as unary operator, because symbol is not an operator but of type "'.
                 gettype($this->getSymbol()).'"'

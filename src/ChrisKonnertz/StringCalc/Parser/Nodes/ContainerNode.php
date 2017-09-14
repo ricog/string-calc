@@ -41,7 +41,7 @@ class ContainerNode extends AbstractNode
     {
         // Ensure integrity of $nodes array
         foreach ($childNodes as $childNode) {
-            if (! is_a($childNode, AbstractNode::class)) {
+            if (! is_a($childNode, '\ChrisKonnertz\StringCalc\Parser\Nodes\AbstractNode')) {
                 throw new \InvalidArgumentException(
                     'Error: Expected AbstractNode, but got "'.gettype($childNode).'"'
                 );

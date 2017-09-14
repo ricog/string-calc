@@ -53,15 +53,15 @@ class Calculator implements CalculatorInterface
      */
     protected function calculateNode(AbstractNode $node)
     {
-        if (is_a($node, SymbolNode::class)) {
+        if (is_a($node, '\ChrisKonnertz\StringCalc\Parser\Nodes\SymbolNode')) {
             /** @var SymbolNode $node */
 
             return $this->calculateSymbolNode($node);
-        } elseif (is_a($node, FunctionNode::class)) {
+        } elseif (is_a($node, '\ChrisKonnertz\StringCalc\Parser\Nodes\FunctionNode')) {
             /** @var FunctionNode $node */
 
             return $this->calculateFunctionNode($node);
-        } elseif (is_a($node, ContainerNode::class)) {
+        } elseif (is_a($node, '\ChrisKonnertz\StringCalc\Parser\Nodes\ContainerNode')) {
             /** @var ContainerNode $node */
 
             return $this->calculateContainerNode($node);
@@ -82,7 +82,7 @@ class Calculator implements CalculatorInterface
      */
     protected function calculateContainerNode(ContainerNode $containerNode)
     {
-        if (is_a($containerNode, FunctionNode::class)) {
+        if (is_a($containerNode, '\ChrisKonnertz\StringCalc\Parser\Nodes\FunctionNode')) {
             throw new \InvalidArgumentException('Error: Expected container node but got a function node');
         }
 
@@ -127,12 +127,12 @@ class Calculator implements CalculatorInterface
 
         if (sizeof($nodes) == 0) {
             $this->throwException(
-                CalculatorException::class, 'Error: Missing calculable subterm. Are there empty brackets?'
+                '\ChrisKonnertz\StringCalc\Exceptions\CalculatorException', 'Error: Missing calculable subterm. Are there empty brackets?'
             );
         }
 
         if (sizeof($nodes) > 1) {
-            $this->throwException(CalculatorException::class, 'Error: Missing operators between parts of the term.');
+            $this->throwException('\ChrisKonnertz\StringCalc\Exceptions\CalculatorException', 'Error: Missing operators between parts of the term.');
         }
 
         // The only remaining element of the $nodes array contains the overall result
@@ -161,10 +161,10 @@ class Calculator implements CalculatorInterface
         $argumentChildNodes = [];
 
         foreach ($nodes as $node) {
-            if (is_a($node, SymbolNode::class)) {
+            if (is_a($node, '\ChrisKonnertz\StringCalc\Parser\Nodes\SymbolNode')) {
                 /** @var SymbolNode $node */
 
-                if (is_a($node->getSymbol(), AbstractSeparator::class)) {
+                if (is_a($node->getSymbol(), '\ChrisKonnertz\StringCalc\Symbols\AbstractSeparator')) {
                     $containerNode = new ContainerNode($argumentChildNodes);
                     $arguments[] = $this->calculateContainerNode($containerNode);
                     $argumentChildNodes = [];
@@ -200,20 +200,20 @@ class Calculator implements CalculatorInterface
     {
         $symbol = $symbolNode->getSymbol();
 
-        if (is_a($symbol, AbstractNumber::class)) {
+        if (is_a($symbol, '\ChrisKonnertz\StringCalc\Symbols\AbstractNumber')) {
             $number = $symbolNode->getToken()->getValue();
 
             // Convert string to int or float (depending on the type of the number)
             // Attention: The fractional part of a PHP float can only have a limited length.
             // If the number has a longer fractional part, it will be cut.
             $number = 0 + $number;
-        } elseif (is_a($symbol, AbstractConstant::class)) {
+        } elseif (is_a($symbol, '\ChrisKonnertz\StringCalc\Symbols\AbstractConstant')) {
             /** @var AbstractConstant $symbol */
 
             $number = $symbol->getValue();
         } else {
             $this->throwException(
-                CalculatorException::class,
+                '\ChrisKonnertz\StringCalc\Exceptions\CalculatorException',
                 'Error: Found symbol of unexpected type "'.get_class($symbol).'", expected number or constant',
                 $symbolNode->getToken()->getPosition(),
                 $symbolNode->getToken()->getValue()
@@ -238,8 +238,8 @@ class Calculator implements CalculatorInterface
 
         // Store all symbol nodes that have a symbol of type abstract operator in an array
         foreach ($nodes as $index => $node) {
-            if (is_a($node, SymbolNode::class)) {
-                if (is_a($node->getSymbol(), AbstractOperator::class)) {
+            if (is_a($node, '\ChrisKonnertz\StringCalc\Parser\Nodes\SymbolNode')) {
+                if (is_a($node->getSymbol(), '\ChrisKonnertz\StringCalc\Symbols\AbstractOperator')) {
                     $operatorNodes[$index] = $node;
                 }
             }
