@@ -1,15 +1,15 @@
 {
   "name": "chriskonnertz/string-calc",
-  "description": "StringCalc is a PHP calculator library for mathematical terms (expressions) passed as strings.",
+  "description": "Fork of Chris Konnertz's StringCalc PHP calculator library backported for PHP 5.4.",
   "keywords": ["stringcalc", "string calc", "string-calc", "math", "calculation", "term", "expression", "parser"],
   "license": "MIT",
   "authors": [
     {
-      "name": "Chris Konnertz"
+      "name": "Rick Guyer"
     }
   ],
   "require": {
-    "php": ">=5.6.0"
+    "php": ">=5.4.0"
   },
   "autoload": {
     "psr-0": {
